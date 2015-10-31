@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-class PostController extends Controller {
+class CommentController extends Controller {
 
     /**
      * Display a listing of the resource.
@@ -14,8 +14,7 @@ class PostController extends Controller {
      */
     public function index()
     {
-        $posts = Posts::whereActive(1)->orderBy('created_at', 'desc')->paginate(5);
-        return view('home')->withPosts($posts)->withTitle('Latest Posts');
+        //
     }
 
     /**
@@ -23,13 +22,9 @@ class PostController extends Controller {
      *
      * @return Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        if ($request->user()->canPost){
-            return view('posts.create');
-        } else {
-            return redirect('/')->withErrors('You do not have sufficient permissions to writing posts');
-        }
+        //
     }
 
     /**
@@ -37,9 +32,14 @@ class PostController extends Controller {
      *
      * @return Response
      */
-    public function store()
+    public function store(Reuqest $request)
     {
-        //
+        Comments::create([
+            'user_id'=>$request->user()->id,
+            'post_id'=>$request->get('post_id'),
+            'body'=>$request->get('body')
+        ]);
+        return redirect($slug)->with('message', 'Comment published');
     }
 
     /**
@@ -48,13 +48,9 @@ class PostController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function show($slug)
+    public function show($id)
     {
-        $post = Posts::whereSlug($slug)->first();
-        if (!$post){
-            return redirect('/')->withErrors('requested page not found');
-        }
-        return view('posts.show')->withPost($post)->withComments($comments);
+        //
     }
 
     /**

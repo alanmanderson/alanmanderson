@@ -3,7 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model {
+    public function comments(){
+        return $this->hasMany('App\Models\Comment');
+    }
 
-	//
-
+    public function author(){
+        return $this->belongsTo('App\Models\User');
+    }
 }
