@@ -1,7 +1,9 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Models\Post;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostFormRequest;
 
 use Illuminate\Http\Request;
 
@@ -14,7 +16,7 @@ class PostController extends Controller {
      */
     public function index()
     {
-        $posts = Posts::whereActive(1)->orderBy('created_at', 'desc')->paginate(5);
+        $posts = Post::whereActive(1)->orderBy('created_at', 'desc')->paginate(5);
         return view('home')->withPosts($posts)->withTitle('Latest Posts');
     }
 
@@ -23,7 +25,7 @@ class PostController extends Controller {
      *
      * @return Response
      */
-    public function create(Request $request)
+    public function create()
     {
         if ($request->user()->canPost){
             return view('posts.create');
@@ -37,9 +39,22 @@ class PostController extends Controller {
      *
      * @return Response
      */
-    public function store()
+    public function store(PostFormRequest $request)
     {
-        //
+        $post = new Post();
+        $post->title = $request->get('title');
+        $post->body = $request->get('body');
+        $post->slug = str_slug($post->title);
+        $post->author_id = $request->user()->id;
+        if ($request->has('save')){
+            $post->active = 0;
+            $message = 'Post saved successfully';
+        } else {
+            $post->active = 1;
+            $message = 'Post published successfully';
+        }
+        $post->save();
+        return redirect('edit/'.$post->slug)->withMessage($message);
     }
 
     /**
