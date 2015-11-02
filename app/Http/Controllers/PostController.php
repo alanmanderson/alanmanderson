@@ -80,7 +80,11 @@ class PostController extends Controller {
      */
     public function edit($id)
     {
-        //
+        $post = Post::whereSlug('slug', $slug)->first();
+        if (!$this->canModify($post, $request->user)){
+            return redirect('/')->withErrors('You do not have sufficient permissions to edit this post');
+        }
+        return $view('posts.edit')->with('post',$post);
     }
 
     /**
@@ -89,9 +93,33 @@ class PostController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
-        //
+        $post = Post::find($id);
+        if(!$this->canModify($post, $request->user())){
+            return redirect('/')->withErrors('You do not have sufficient permissions to edit this post');
+        }
+        $title = $request->input('title');
+        $slug = str_slug($title);
+        $duplicate = Post::where('slug',$slug)->first();
+        if($duplicate && $duplicate->id != $post_id){
+            return redirect('edit/'.$post->slug)->withErrors('Title already exists.')->withInput();
+        }
+        $post->slug = $slug;
+        $post->title = $title;
+        $post->body = $request->input('body');
+        if($request->has('save')){
+            $post->active = 0;
+            $message = 'Post saved successfully';
+            $landing = 'edit/'.$post->slug;
+        } else {
+            $post->active = 1;
+            $message = 'Post updated successfully';
+            $landing = $post->slug;
+        }
+        $post->save();
+        return redirect($landing)->withMessage($message);
+        }
     }
 
     /**
@@ -100,9 +128,17 @@ class PostController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $post = Post::find($id);
+        if (!$this->canModify($post, $request->user()){
+            return redirect('/')->withErrors('You do not have permissions to delete this post');
+        }
+        $post->delete();
+        return redirect('/')->withMessage('Post deleted successfully');
     }
 
+    private function canModify($post, $user){
+        return $post && ($user->isAdmin || $post->user_id == $user->id);
+    }
 }
