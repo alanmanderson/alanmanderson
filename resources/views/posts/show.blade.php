@@ -2,7 +2,7 @@
 @section('title')
   @if($post)
     {{ $post->title }}
-    @if(!Auth::guest() && ($post->author_id == Auth::user()->id || Auth::user()->is_admin()))
+    @if(!Auth::guest() && ($post->author_id == Auth::user()->id || Auth::user()->isAdmin))
       <button class="btn" style="float: right"><a href="{{ url('edit/'.$post->slug)}}">Edit Post</a></button>
     @endif
   @else

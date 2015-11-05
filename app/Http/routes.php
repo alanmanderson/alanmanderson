@@ -11,13 +11,19 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
+Route::get('/', 'PostController@index');
 
 Route::get('home', 'HomeController@index');
 
-Route::resource('posts','PostController');
-
 Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
+    'auth' => 'Auth\AuthController',
+    'password' => 'Auth\PasswordController',
 ]);
+
+Route::get('posts', 'PostController@index');
+Route::get('posts/{slug}', 'PostController@show');
+
+Route::group(['middleware' => ['auth']], function(){
+    Route::resource('posts','PostController', ['except' => ['index', 'show']]);
+
+});

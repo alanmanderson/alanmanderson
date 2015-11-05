@@ -14,6 +14,6 @@ class PostTableSeeder extends Seeder {
     {
         Post::unguard();
         $now = date('Y-m-d');
-        Post::create(['author_id' => 1, 'title' => 'First Blog', 'body' => '**First** Blog Body', "slug" => ";lknqwer897afd", "active" => 1, "created_at" => $now, "updated_at" => $now]);
+        Post::create(['author_id' => 1, 'title' => 'First Blog', 'body' => '**First** Blog Body', "slug" => "first-post", "active" => 1, "created_at" => $now, "updated_at" => $now]);
     }
 }

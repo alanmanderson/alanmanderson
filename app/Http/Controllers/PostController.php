@@ -25,7 +25,7 @@ class PostController extends Controller {
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request) 
     {
         if ($request->user()->canPost){
             return view('posts.create');
@@ -65,11 +65,11 @@ class PostController extends Controller {
      */
     public function show($slug)
     {
-        $post = Posts::whereSlug($slug)->first();
+        $post = Post::whereSlug($slug)->first();
         if (!$post){
             return redirect('/')->withErrors('requested page not found');
         }
-        return view('posts.show')->withPost($post)->withComments($comments);
+        return view('posts.show')->withPost($post)->withComments($post->comments);
     }
 
     /**
@@ -78,7 +78,7 @@ class PostController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    public function edit(Request $request, $slug)
     {
         $post = Post::whereSlug('slug', $slug)->first();
         if (!$this->canModify($post, $request->user)){
@@ -119,7 +119,6 @@ class PostController extends Controller {
         }
         $post->save();
         return redirect($landing)->withMessage($message);
-        }
     }
 
     /**
@@ -131,7 +130,7 @@ class PostController extends Controller {
     public function destroy(Request $request, $id)
     {
         $post = Post::find($id);
-        if (!$this->canModify($post, $request->user()){
+        if (!$this->canModify($post, $request->user())){
             return redirect('/')->withErrors('You do not have permissions to delete this post');
         }
         $post->delete();
