@@ -73,8 +73,4 @@ return array(
     |
     */
     'proxy' => null
-
-:q
-:C
-:c
 );
