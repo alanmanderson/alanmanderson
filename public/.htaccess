@@ -1,3 +1,6 @@
+# This commented code was on my server and may be needed.
+# Use PHP5.4 as default
+# AddHandler application/x-httpd-php54 .php
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews
