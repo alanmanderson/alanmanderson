@@ -15,6 +15,12 @@ Route::get('/', 'PostController@index');
 
 Route::get('home', 'HomeController@index');
 
+//Route::get('auth/login', 'Auth\AuthController@getLogin');
+//Route::get('auth/{provider}', 'Auth\AuthController@redirectToProvider')->where('provider', '!(login)');
+//Route::get('auth/{provider}/callback', 'Auth\AuthController@handleProviderCallback')->where('provider', '!(login)');
+
+Route::get('auth/github', 'Auth\AuthController@login');
+
 Route::controllers([
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',

@@ -144,7 +144,8 @@ return [
         'App\Providers\ConfigServiceProvider',
         'App\Providers\EventServiceProvider',
         'App\Providers\RouteServiceProvider',
-        'Bugsnag\BugsnagLaravel\BugsnagLaravelServiceProvider'
+        'Bugsnag\BugsnagLaravel\BugsnagLaravelServiceProvider',
+        Laravel\Socialite\SocialiteServiceProvider::class
     ],
 
     /*
@@ -193,7 +194,8 @@ return [
         'Validator' => 'Illuminate\Support\Facades\Validator',
         'View'      => 'Illuminate\Support\Facades\View',
 
-        'Bugsnag' => 'Bugsnag\BugsnagLaravel\BugsnagFacade'
+        'Bugsnag' => 'Bugsnag\BugsnagLaravel\BugsnagFacade',
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class
 
     ],
 
