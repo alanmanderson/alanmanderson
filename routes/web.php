@@ -17,3 +17,5 @@ Route::get('/', function () {
 
 Route::resource('posts', 'PostController');
 
+Route::get('login/github', 'Auth\LoginController@redirectToProvider');
+Route::get('login/github/callback', 'Auth\LoginController@handleProviderCallback');
